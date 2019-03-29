@@ -5,11 +5,12 @@ class App extends Component {
 
   state = {
     names: [],
-    description: []
   }
-
+//you have to use one of the three fixes for JSX readability issues. here arrow syntax was used
   userSearch = (event) => {
     event.preventDefault();
+    console.log(event.target);
+    //i console logged event.target and saw it was targeting the form so i had to put a name="" for my input to set the value to this variable
     const characterName = event.target.characterNameSearch.value;
     //this is allowing the user to search for a character by name
     fetch(`https://swapi.co/api/people/?search=${characterName}`, {
@@ -26,11 +27,14 @@ class App extends Component {
       throw new Error(response.statusText);
     })
     .then(data => {
+      //had to log the data to see what it was returning
       console.log(data);
+      //created an empty array for the loop to loop through
       let search = []
       for(let i = 0; i < data.results.length; i++) {
         search.push(data.results[i].name)
       }
+      //this.setState is assigned the value of names from the store for what the loop is returning
       this.setState({
         names: search
       })
@@ -40,6 +44,7 @@ class App extends Component {
 
   userResults(characterName) {
     //console.log('hi');
+    
     return (
       // this is mapping through the variable set in the render
       <ul>
@@ -69,6 +74,7 @@ class App extends Component {
           Find your favorite characters here.
          </label>
          <br></br>
+         {/* I had to give my input a name */}
          <input type="text" name="characterNameSearch"></input>
          <button type="submit">
             Go!
