@@ -5,15 +5,15 @@ class App extends Component {
 
   state = {
     names: [],
-    description: [],
-    movies: [],
+    description: []
   }
 
-  userSearch() {
+  userSearch = (event) => {
+    event.preventDefault();
+    const characterName = event.target.characterNameSearch.value;
     //this is allowing the user to search for a character by name
-    fetch(`https://swapi.co/api/people/?search=${name}`, {
+    fetch(`https://swapi.co/api/people/?search=${characterName}`, {
       method: 'GET',
-      //headers is from the API documentation
       headers: {
         'Content-Type': 'application/json'
       }
@@ -25,17 +25,37 @@ class App extends Component {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => userResults(responseJson))
+    .then(data => {
+      console.log(data);
+      let search = []
+      for(let i = 0; i < data.results.length; i++) {
+        search.push(data.results[i].name)
+      }
+      this.setState({
+        names: search
+      })
+    })
     .catch(console.error)
   }
 
-  userResults() {
+  userResults(characterName) {
+    //console.log('hi');
     return (
-      <li></li>
+      // this is mapping through the variable set in the render
+      <ul>
+        {characterName.map(item => {
+          return <li key ={item}>
+            {item}
+          </li>
+        })
+        }
+      </ul>
     )
   }
   
   render() {
+    //i am setting the parameter characterName equal to the empty array in the state
+    const characterName = this.state.names;
     return (
       <div className="App">
        <header>
@@ -43,18 +63,20 @@ class App extends Component {
        </header>
        <section>
           <h2>Search for the characters you love:</h2>
+         
         <form onSubmit={this.userSearch}>
          <label htmlFor="name-searching">
           Find your favorite characters here.
          </label>
-         <input type="text"></input>
+         <br></br>
+         <input type="text" name="characterNameSearch"></input>
          <button type="submit">
             Go!
          </button>
         </form>
         </section>
       <section>
-        {this.userResults()}
+       {this.userResults(characterName)}
       </section>
       </div>
     );
