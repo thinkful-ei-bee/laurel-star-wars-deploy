@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+// import './App.css';
 
 class App extends Component {
 
@@ -13,7 +13,7 @@ class App extends Component {
     //i console logged event.target and saw it was targeting the form so i had to put a name="" for my input to set the value to this variable
     const characterName = event.target.characterNameSearch.value;
     //this is allowing the user to search for a character by name
-    fetch(`${characterName}`, {
+    fetch(`https://swapi.co/api/people/?search=${characterName}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -21,6 +21,7 @@ class App extends Component {
     })
     //error handling
     .then(response => {
+      console.log(response)
       if(response.ok) {
         return response.json()
       }
